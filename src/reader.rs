@@ -31,7 +31,7 @@ impl<R: Reader+Send> InflateReader<R>
     fn read_inner(&mut self) -> io::IoResult<uint>
     {
         if self.buffer_len() >= 512 { return Ok(0) }
-        self.reduce_buffer_if_needed();
+        self.reduce_buffer();
 
         let mut temp_buffer = [0, ..512];
         match self.inner.read(&mut temp_buffer)
@@ -53,21 +53,21 @@ impl<R: Reader+Send> InflateReader<R>
         self.buffer.len() - self.buffer_pos
     }
 
-    fn buffer_ptr(&mut self) -> *mut u8
+    fn buffer_ptr(&mut self) -> *const u8
     {
         let len = self.buffer.len();
         let start = self.buffer_pos;
         if start < len
         {
-            self.buffer.mut_slice(start, len).as_mut_ptr()
+            self.buffer.mut_slice(start, len).as_ptr()
         }
         else
         {
-            ptr::mut_null()
+            ptr::null()
         }
     }
 
-    fn reduce_buffer_if_needed(&mut self)
+    fn reduce_buffer(&mut self)
     {
         if self.buffer.len() < 2048 || self.buffer_len() > 1024
         {

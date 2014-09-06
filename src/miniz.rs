@@ -5,7 +5,7 @@ use std::io;
 #[repr(C)]
 pub struct mz_stream_s
 {
-    pub next_in: *mut u8,
+    pub next_in: *const u8,
     pub avail_in: c_uint,
     pub total_in: c_ulong,
 
@@ -31,7 +31,7 @@ impl mz_stream_s
     {
         mz_stream_s
         {
-            next_in: ptr::mut_null(), avail_in: 0, total_in: 0,
+            next_in: ptr::null(), avail_in: 0, total_in: 0,
             next_out: ptr::mut_null(), avail_out: 0, total_out: 0,
             msg: ptr::mut_null(), state: ptr::mut_null(),
             zalloc: ptr::null(), zfree: ptr::null(), opaque: ptr::null(),
@@ -52,6 +52,7 @@ extern "C"
     pub fn mz_deflateEnd(pStream: *mut mz_stream_s) -> c_int;
 }
 
+pub static MZ_NO_FLUSH : c_int = 0;
 pub static MZ_SYNC_FLUSH : c_int = 2;
 pub static MZ_FINISH : c_int = 4;
 
