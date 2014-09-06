@@ -30,10 +30,10 @@ impl<R: Reader+Send> InflateReader<R>
 
     fn read_inner(&mut self) -> io::IoResult<uint>
     {
-        if self.buffer_len() >= 512 { return Ok(0) }
+        if self.buffer_len() >= ::READ_BUFFER_SIZE { return Ok(0) }
         self.reduce_buffer();
 
-        let mut temp_buffer = [0, ..512];
+        let mut temp_buffer = [0, ..::READ_BUFFER_SIZE];
         match self.inner.read(&mut temp_buffer)
         {
             Err(e) => Err(e),
@@ -69,7 +69,7 @@ impl<R: Reader+Send> InflateReader<R>
 
     fn reduce_buffer(&mut self)
     {
-        if self.buffer.len() < 2048 || self.buffer_len() > 1024
+        if self.buffer.len() < ::REDUCE_MIN_TOTAL_LEN || self.buffer_len() > ::REDUCE_MAX_AVAIL_LEN
         {
             return
         }

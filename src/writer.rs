@@ -47,15 +47,16 @@ impl<W: Writer+Send> DeflateWriter<W>
 
     fn flush(&mut self) -> io::IoResult<()>
     {
-        if self.buffer_len() < 128 { return Ok(()) }
+        if self.buffer_len() < ::WRITE_FLUSH_MIN_AVAIL { return Ok(()) }
         self.flush_generic(miniz::MZ_NO_FLUSH)
     }
 
     fn flush_generic(&mut self, flag: c_int) -> io::IoResult<()>
     {
+        let mut additional_size = ::WRITE_BUFFER_ADDITIONAL_SIZE;
         loop
         {
-            let mut out_buffer = Vec::with_capacity(self.buffer_len() + 32);
+            let mut out_buffer = Vec::with_capacity(self.buffer_len() + additional_size);
 
             let prev_in = self.miniz_data.total_in as uint;
             let prev_out = self.miniz_data.total_out as uint;
@@ -81,6 +82,7 @@ impl<W: Writer+Send> DeflateWriter<W>
             try!(self.inner.write(out_buffer.as_slice()));
 
             if self.miniz_data.avail_out != 0 { break; }
+            additional_size = additional_size + additional_size / 2;
         }
         self.reduce_buffer();
         Ok(())
@@ -88,7 +90,7 @@ impl<W: Writer+Send> DeflateWriter<W>
 
     fn reduce_buffer(&mut self)
     {
-        if self.buffer.len() < 2048 || self.buffer_len() > 1024
+        if self.buffer.len() < ::REDUCE_MIN_TOTAL_LEN || self.buffer_len() > ::REDUCE_MAX_AVAIL_LEN
         {
             return
         }

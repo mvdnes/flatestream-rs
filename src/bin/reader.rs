@@ -1,4 +1,7 @@
+#![feature(phase)]
+
 extern crate flatestream;
+#[phase(plugin, link)] extern crate log;
 
 use std::{os, io};
 
@@ -19,7 +22,7 @@ fn main()
                 print!("{}", u as char);
             }
             Err(ref e) if e.kind == io::EndOfFile => { break },
-            Err(e) => { println!("Error: {}", e); break },
+            Err(e) => { error!("Error: {}", e); break },
         }
     }
 }
