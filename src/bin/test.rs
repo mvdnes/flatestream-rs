@@ -7,18 +7,19 @@ fn main()
     let args = os::args();
 
     let path = Path::new(args.as_slice()[1].as_slice());
-    let mut file = io::fs::File::open(&path);
+    let file = io::fs::File::open(&path);
+    let mut fstream = flatestream::InflateReader::new(file).unwrap();
 
-    let mut fstream = flatestream::InflateReader::new(&mut file);
-    match fstream.read_to_end()
+    loop
     {
-        Ok(vec) =>
+        match fstream.read_byte()
         {
-            for u in vec.iter()
+            Ok(u) =>
             {
-                print!("{}", *u as char);
+                print!("{}", u as char);
             }
+            Err(ref e) if e.kind == io::EndOfFile => { break },
+            Err(e) => { println!("Error: {}", e); break },
         }
-        Err(e) => { println!("Error: {}", e); },
     }
 }
