@@ -1,8 +1,7 @@
 #![feature(phase)]
 
-#[phase(plugin, link)] extern crate log;
-
 extern crate flatestream;
+#[phase(plugin, link)] extern crate log;
 
 use std::{os, io};
 
@@ -11,22 +10,23 @@ fn main()
     let args = os::args();
 
     let path = Path::new(args.as_slice()[1].as_slice());
-    let mut file = io::fs::File::open(&path);
+    let mut deflated = io::fs::File::open(&path);
 
-    let out = io::stdout();
+    let stdout = io::stdout();
+    let mut inflated = flatestream::DeflateWriter::new(stdout).unwrap();
 
-    let mut fstream = flatestream::DeflateWriter::new(out).unwrap();
+    let mut buffer = [0u8, ..4096];
 
     loop
     {
-        match file.read_byte()
+        match deflated.read(&mut buffer)
         {
-            Ok(u) =>
+            Ok(n) =>
             {
-                match fstream.write(&[u])
+                match inflated.write(buffer.slice(0, n))
                 {
-                    Ok(()) => {},
-                    Err(e) => { error!("Write error!: {}", e); break },
+                    Err(e) => { error!("Write error: {}", e); break },
+                    _ => {},
                 }
             },
             Err(ref e) if e.kind == io::EndOfFile => { break },
