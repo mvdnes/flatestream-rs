@@ -3,6 +3,7 @@ use std::ptr;
 use std::io;
 use miniz;
 
+/// Writer that automatically deflates output and sends it to the contained writer
 pub struct DeflateWriter<W>
 {
     miniz_data: miniz::mz_stream_s,
@@ -15,6 +16,7 @@ static FLATE_LEVEL : c_int = 6;
 
 impl<W: Writer+Send> DeflateWriter<W>
 {
+    /// Constructs a new DeflateWriter, which writes deflated output to the inner writer.
     pub fn new(inner: W) -> io::IoResult<DeflateWriter<W>>
     {
         let mut miniz_data = miniz::mz_stream_s::empty();

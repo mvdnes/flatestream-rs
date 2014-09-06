@@ -3,6 +3,7 @@ use libc::c_uint;
 use std::io;
 use miniz;
 
+/// Reader that automatically inflates data from the contained reader
 pub struct InflateReader<R>
 {
     miniz_data: miniz::mz_stream_s,
@@ -14,6 +15,7 @@ pub struct InflateReader<R>
 
 impl<R: Reader+Send> InflateReader<R>
 {
+    /// Construct a new InflateReader, which inflates data from the inner Reader.
     pub fn new(inner: R) -> io::IoResult<InflateReader<R>>
     {
         let mut miniz_data = miniz::mz_stream_s::empty();
