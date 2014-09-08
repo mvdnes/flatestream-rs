@@ -43,15 +43,16 @@ impl mz_stream_s
 #[link(name = "miniz", kind = "static")]
 extern "C"
 {
-    pub fn mz_inflateInit(pStream: *mut mz_stream_s) -> c_int;
+    pub fn mz_inflateInit2(pStream: *mut mz_stream_s, window_bits: c_int) -> c_int;
     pub fn mz_inflate(pStream: *mut mz_stream_s, flush: c_int) -> c_int;
     pub fn mz_inflateEnd(pStream: *mut mz_stream_s) -> c_int;
 
-    pub fn mz_deflateInit(pStream: *mut mz_stream_s, level: c_int) -> c_int;
+    pub fn mz_deflateInit2(pStream: *mut mz_stream_s, level: c_int, method: c_int, window_bits: c_int, mem_level: c_int, strategy: c_int) -> c_int;
     pub fn mz_deflate(pStream: *mut mz_stream_s, flush: c_int) -> c_int;
     pub fn mz_deflateEnd(pStream: *mut mz_stream_s) -> c_int;
 }
 
+pub static MZ_DEFAULT_WINDOW_BITS : c_int = 15;
 pub static MZ_NO_FLUSH : c_int = 0;
 pub static MZ_SYNC_FLUSH : c_int = 2;
 pub static MZ_FINISH : c_int = 4;

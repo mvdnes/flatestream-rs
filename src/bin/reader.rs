@@ -11,7 +11,7 @@ fn main()
 
     let path = Path::new(args.as_slice()[1].as_slice());
     let file = io::fs::File::open(&path);
-    let mut deflated = flatestream::InflateReader::new(file).unwrap();
+    let mut deflated = flatestream::InflateReader::new(file, true).unwrap();
 
     let mut inflated = io::stdout();
 

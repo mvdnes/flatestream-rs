@@ -8,7 +8,7 @@
 //! {
 //!     let mut stdin = std::io::stdin();
 //!     let stdout = std::io::stdout();
-//!     let mut deflater = flatestream::DeflateWriter::new(stdout);
+//!     let mut deflater = flatestream::DeflateWriter::new(stdout, true);
 //!
 //!     loop
 //!     {

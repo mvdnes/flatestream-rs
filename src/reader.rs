@@ -16,10 +16,11 @@ pub struct InflateReader<R>
 impl<R: Reader+Send> InflateReader<R>
 {
     /// Construct a new InflateReader, which inflates data from the inner Reader.
-    pub fn new(inner: R) -> io::IoResult<InflateReader<R>>
+    pub fn new(inner: R, zlib_header: bool) -> io::IoResult<InflateReader<R>>
     {
         let mut miniz_data = miniz::mz_stream_s::empty();
-        try!(miniz::code_to_result(unsafe { miniz::mz_inflateInit(&mut miniz_data) }));
+        let flag = if zlib_header { 1 } else { -1 } * miniz::MZ_DEFAULT_WINDOW_BITS;
+        try!(miniz::code_to_result(unsafe { miniz::mz_inflateInit2(&mut miniz_data, flag) }));
         Ok(InflateReader
         {
             miniz_data: miniz_data,

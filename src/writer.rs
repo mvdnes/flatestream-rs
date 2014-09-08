@@ -17,10 +17,11 @@ static FLATE_LEVEL : c_int = 6;
 impl<W: Writer+Send> DeflateWriter<W>
 {
     /// Constructs a new DeflateWriter, which writes deflated output to the inner writer.
-    pub fn new(inner: W) -> io::IoResult<DeflateWriter<W>>
+    pub fn new(inner: W, zlib_header: bool) -> io::IoResult<DeflateWriter<W>>
     {
         let mut miniz_data = miniz::mz_stream_s::empty();
-        try!(miniz::code_to_result(unsafe { miniz::mz_deflateInit(&mut miniz_data, FLATE_LEVEL) }));
+        let flag = if zlib_header { 1 } else { -1 } * miniz::MZ_DEFAULT_WINDOW_BITS;
+        try!(miniz::code_to_result(unsafe { miniz::mz_deflateInit2(&mut miniz_data, FLATE_LEVEL, 8, flag, 9, 0) }));
         Ok(DeflateWriter
         {
             miniz_data: miniz_data,

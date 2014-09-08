@@ -13,7 +13,7 @@ fn main()
     let mut deflated = io::fs::File::open(&path);
 
     let stdout = io::stdout();
-    let mut inflated = flatestream::DeflateWriter::new(stdout).unwrap();
+    let mut inflated = flatestream::DeflateWriter::new(stdout, true).unwrap();
 
     let mut buffer = [0u8, ..4096];
 
