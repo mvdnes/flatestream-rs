@@ -62,7 +62,7 @@ impl<R: Reader+Send> InflateReader<R>
         let start = self.buffer_pos;
         if start < len
         {
-            self.buffer.mut_slice(start, len).as_ptr()
+            self.buffer.slice_mut(start, len).as_ptr()
         }
         else
         {

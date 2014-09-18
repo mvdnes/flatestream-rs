@@ -32,8 +32,8 @@ impl mz_stream_s
         mz_stream_s
         {
             next_in: ptr::null(), avail_in: 0, total_in: 0,
-            next_out: ptr::mut_null(), avail_out: 0, total_out: 0,
-            msg: ptr::mut_null(), state: ptr::mut_null(),
+            next_out: ptr::null_mut(), avail_out: 0, total_out: 0,
+            msg: ptr::null_mut(), state: ptr::null_mut(),
             zalloc: ptr::null(), zfree: ptr::null(), opaque: ptr::null(),
             data_type: 0, adler: 0, reserved: 0,
         }
