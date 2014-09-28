@@ -77,7 +77,7 @@ impl<R: Reader+Send> InflateReader<R>
             return
         }
 
-        self.buffer = Vec::from_slice(self.buffer.slice(self.buffer_pos, self.buffer.len()));
+        self.buffer = self.buffer.slice(self.buffer_pos, self.buffer.len()).to_vec();
         self.buffer_pos = 0;
     }
 }
