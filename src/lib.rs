@@ -29,11 +29,11 @@ extern crate libc;
 pub use reader::InflateReader;
 pub use writer::DeflateWriter;
 
-static READ_BUFFER_SIZE : uint = 512;
-static REDUCE_MIN_TOTAL_LEN : uint = 2048;
-static REDUCE_MAX_AVAIL_LEN : uint = 1024;
-static WRITE_FLUSH_MIN_AVAIL : uint = 128;
-static WRITE_BUFFER_ADDITIONAL_SIZE : uint = 32;
+const READ_BUFFER_SIZE : uint = 512;
+const REDUCE_MIN_TOTAL_LEN : uint = 2048;
+const REDUCE_MAX_AVAIL_LEN : uint = 1024;
+const WRITE_FLUSH_MIN_AVAIL : uint = 128;
+const WRITE_BUFFER_ADDITIONAL_SIZE : uint = 32;
 
 mod miniz;
 mod reader;
