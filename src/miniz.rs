@@ -81,10 +81,10 @@ pub fn code_to_result(code: c_int) -> io::IoResult<()>
         {
             StreamEnd => Err(io::standard_error(io::EndOfFile)),
             NeedDict | ErrNo | StreamError | DataError | VersionError => Err(io::standard_error(io::MismatchedFileTypeForOperation)),
-            MemError => fail!("Miniz memory error occured"),
-            BufError => fail!("Miniz buffer error occured"),
-            ParamError => fail!("Miniz parameter error occured"),
+            MemError => panic!("Miniz memory error occured"),
+            BufError => panic!("Miniz buffer error occured"),
+            ParamError => panic!("Miniz parameter error occured"),
         },
-        None => fail!("Miniz produced an unknown error"),
+        None => panic!("Miniz produced an unknown error"),
     }
 }
