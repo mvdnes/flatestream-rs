@@ -21,7 +21,7 @@
 //! ```
 
 #![feature(unsafe_destructor, phase)]
-#![warn(missing_doc)]
+#![warn(missing_docs)]
 
 extern crate libc;
 #[phase(plugin, link)] extern crate log;
