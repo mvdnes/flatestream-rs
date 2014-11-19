@@ -79,11 +79,11 @@ pub fn code_to_result(code: c_int) -> io::IoResult<()>
     {
         Some(e) => match e
         {
-            StreamEnd => Err(io::standard_error(io::EndOfFile)),
-            NeedDict | ErrNo | StreamError | DataError | VersionError => Err(io::standard_error(io::MismatchedFileTypeForOperation)),
-            MemError => panic!("Miniz memory error occured"),
-            BufError => panic!("Miniz buffer error occured"),
-            ParamError => panic!("Miniz parameter error occured"),
+            MzError::StreamEnd => Err(io::standard_error(io::EndOfFile)),
+            MzError::NeedDict | MzError::ErrNo | MzError::StreamError | MzError::DataError | MzError::VersionError => Err(io::standard_error(io::MismatchedFileTypeForOperation)),
+            MzError::MemError => panic!("Miniz memory error occured"),
+            MzError::BufError => panic!("Miniz buffer error occured"),
+            MzError::ParamError => panic!("Miniz parameter error occured"),
         },
         None => panic!("Miniz produced an unknown error"),
     }
